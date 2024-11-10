@@ -4,17 +4,25 @@ const app = express();
 
 
 //Request Handler
+app.get('/users', (req, res)=> {
+    res.send({firstname: "balu", lastname: "patil"})
+})
+
+app.post("/users", (req, res) => {
+    res.send("User data save into DB..!");
+})
+
+app.delete("/users", (req, res) => {
+    res.send("User data delete into DB..!");
+})
+
+app.put("/users", (req, res) => {
+    res.send("User data updated>> ");
+})
+
 
 app.use("/",(req, res)=> {
     res.send("Hello from Dashboard..!");
-})
-
-app.use("/test",(req, res)=> {
-    res.send("Hello from server..!");
-})
-
-app.use("/hello",(req, res)=> {
-    res.send("Hello Hello hello..!");
 })
 
 app.listen(3000, ()=> {
