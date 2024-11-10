@@ -21,6 +21,16 @@ app.put("/users", (req, res) => {
 })
 
 
+<<<<<<< HEAD
+=======
+app.use("/test",(req, res)=> {
+    res.send("Hello from server..!");
+})
+
+app.use("/hello",(req, res)=> {
+    res.send("Hello Hello hello..!");
+})
+>>>>>>> b4f9119701600a92f1e039e66effef22955c45d5
 app.use("/",(req, res)=> {
     res.send("Hello from Dashboard..!");
 })
