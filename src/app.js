@@ -1,24 +1,28 @@
-const express = require('express');
+const express = require("express");
+
+const  { authAdmin, authUser } = require('./middlewares/Auth.js');
 
 const app = express();
 
+app.use("/admin", authAdmin);
 
-// app.get('/users', rH1, [rH2, rH3] )
+app.get("/user", authUser, (req, res)=> {
+    // console.log("user auth...");
+    res.send("user.....!");
+})
 
-app.use("/users", [(req, res, next)=> {
-    console.log("request handler 1");
-    next();
-    // res.send('response..!');
-}, (req, res, next)=> {
-    console.log("request handler 2");
-    // res.send("response2..!")
-    next();
-},  (req, res)=> {
-    console.log("request handler 3");
-    res.send("response3..!")
-}])
+app.get("/user/login", (req, res)=> {
+    res.send("user login...!");
+})
 
+app.get("/admin/getUserData", (req, res) => {
+  res.send("all user data successfully fetched...");
+});
 
-app.listen(3000, ()=> {
-    console.log("Server is successfully listening on port 3000");
+app.get("/admin/deleteUserData", (req, res) => {
+  res.send("all user data successfully deleted...");
+});
+
+app.listen(3000, () => {
+  console.log("Server is successfully listening on port 3000");
 });
