@@ -3,12 +3,20 @@ const express = require('express');
 const app = express();
 
 
-//Request Handler
-app.get("/users/:userId/:name", (req, res)=> {
-    // console.log(req.query);
-    console.log(req.params)
-    res.send({firstname: "balu", lastname: "patil"})
-})
+// app.get('/users', rH1, [rH2, rH3] )
+
+app.use("/users", [(req, res, next)=> {
+    console.log("request handler 1");
+    next();
+    // res.send('response..!');
+}, (req, res, next)=> {
+    console.log("request handler 2");
+    // res.send("response2..!")
+    next();
+},  (req, res)=> {
+    console.log("request handler 3");
+    res.send("response3..!")
+}])
 
 
 app.listen(3000, ()=> {
