@@ -6,9 +6,11 @@ const User = require("./models/User");
 // Middleware to parse JSON
 app.use(express.json());
 
+//signup
 app.post("/signup", async (req, res) => {
   const { firstName, lastName, email, password, age, gender } = req.body;
 
+  //User instance
   const user = new User({
     firstName,
     lastName,
@@ -21,7 +23,7 @@ app.post("/signup", async (req, res) => {
   try {
     await user.save();
     res.json({
-        data:{
+      data: {
         firstName,
         lastName,
         email,
@@ -29,12 +31,42 @@ app.post("/signup", async (req, res) => {
         age,
         gender,
       },
-    message: "User Added successfully"
+      message: "User Added successfully",
     });
   } catch (error) {
     res.status(200).send("error while adding data" + error.message);
   }
 });
+
+//get one user
+app.get("/user", async (req, res) => {
+  const userEmail = req.body.email;
+  try {
+    const user = await User.findOne({ email: userEmail });
+    if (!user) {
+      res.status(404).send("user not found..!");
+    } else {
+      res.send(user);
+    }
+  } catch (error) {
+    res.status(400).send("Something wents to wrong...");
+  }
+});
+
+//get all user
+
+app.get("/feed", async (req, res)=> {
+  try {
+    const users = await User.find({});
+    if(!users) {
+      res.status(404).send("users not found ..!");
+    } else {
+      res.send(users);
+    }
+  } catch (error) {
+    res.status(400).send("Something went wrong...");
+  }
+})
 
 connectDB()
   .then(() => {

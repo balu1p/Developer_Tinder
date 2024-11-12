@@ -17,6 +17,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         // required: true,
     },
+    profileImg: {
+        type: String,
+    },
     age: {
         type: Number,
         // required: true,
