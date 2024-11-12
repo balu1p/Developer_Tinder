@@ -1,7 +1,7 @@
 const express = require("express");
 const connectDB = require("./config/database");
 const app = express();
-const User = require("./models/User");
+const User = require("./models/user");
 
 // Middleware to parse JSON
 app.use(express.json());
@@ -40,9 +40,9 @@ app.post("/signup", async (req, res) => {
 
 //get one user
 app.get("/user", async (req, res) => {
-  const userEmail = req.body.email;
+  const userId = req.body._id;
   try {
-    const user = await User.findOne({ email: userEmail });
+    const user = await User.findById({ _id: userId });
     if (!user) {
       res.status(404).send("user not found..!");
     } else {
@@ -54,7 +54,6 @@ app.get("/user", async (req, res) => {
 });
 
 //get all user
-
 app.get("/feed", async (req, res)=> {
   try {
     const users = await User.find({});
@@ -65,6 +64,36 @@ app.get("/feed", async (req, res)=> {
     }
   } catch (error) {
     res.status(400).send("Something went wrong...");
+  }
+})
+
+//delete user 
+app.delete("/user", async (req, res) => {
+  const userId = req.body.userId;
+  try{
+    await User.findByIdAndDelete(userId);
+    res.send("user deleted successfully..!")
+  }
+  catch (error) {
+    res.status(400).send("Something went wrong...");
+  }
+});
+
+//Update the user
+app.patch("/user",async (req, res) => {
+  const userId = req.body.userId;
+  const data = req.body;
+
+  try {
+    const user = await User.findByIdAndUpdate(userId, data, {returnDocument : "after",
+      runValidators: true,
+    });
+    res.status(200).json({
+      data: user,
+      message: "user updated successfully.."
+    })
+  }catch (error) {
+    res.status(400).send("Failed to add data..!" + error.message);
   }
 })
 
