@@ -46,8 +46,12 @@ const validateSignup = (req) => {
         throw new Error("About section must not exceed 200 characters.");
     }
 
-    if (phoneNo && !validator.isMobilePhone(phoneNo, 'any')) {
-        throw new Error("Invalid phone number.");
+    if (phoneNo) {
+        const strPhoneNo = phoneNo.toString();
+        if(!validator.isMobilePhone(strPhoneNo, 'any')) {
+            throw new Error("Invalid phone number.");
+        }
+        
     }
 
     if (profileImg && !validator.isURL(profileImg)) {

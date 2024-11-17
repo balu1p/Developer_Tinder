@@ -37,5 +37,26 @@ profileRouter.get('/profile/view', userAuth, async (req, res)=> {
     }
   });
 
+  //change password
+  profileRouter.patch('/profile/password', userAuth, async(req, res) => {
+    try {
+      const { password, newPassword } = req.body;
+      const user = req.user;
+      const isPassword = await user.isPasswordCorrect(password);
+
+      if(!isPassword) {
+        throw new Error("Invalid password");
+      } 
+      user.password = newPassword;
+      await user.save();
+     res.status(200).json({
+      data : user,
+      message: "password updated successfully..."
+     })
+    } catch (error) {
+      res.send("ERROR :"+ error.message);
+    }
+  });
+
 
   module.exports = profileRouter;
