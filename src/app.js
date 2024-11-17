@@ -1,101 +1,24 @@
 const express = require("express");
 const connectDB = require("./config/database");
 const app = express();
-const User = require("./models/user");
+const cookieParser = require('cookie-parser');
+
+const feedRouter = require("./routes/feed.js");
+const profileRouter = require("./routes/profile.js");
+const requestRouter = require("./routes/request.js");
+const userRouter = require("./routes/user.js");
+const authRouter = require("./routes/auth.js");
 
 // Middleware to parse JSON
 app.use(express.json());
+app.use(cookieParser());
 
-//signup
-app.post("/signup", async (req, res) => {
-  const { firstName, lastName, email, password, age, gender } = req.body;
+app.use('/', feedRouter);
+app.use('/', profileRouter);
+app.use('/', requestRouter);
+app.use('/', userRouter);
+app.use('/', authRouter);
 
-  //User instance
-  const user = new User({
-    firstName,
-    lastName,
-    email,
-    password,
-    age,
-    gender,
-  });
-
-  try {
-    await user.save();
-    res.json({
-      data: {
-        firstName,
-        lastName,
-        email,
-        password,
-        age,
-        gender,
-      },
-      message: "User Added successfully",
-    });
-  } catch (error) {
-    res.status(200).send("error while adding data" + error.message);
-  }
-});
-
-//get one user
-app.get("/user", async (req, res) => {
-  const userId = req.body._id;
-  try {
-    const user = await User.findById({ _id: userId });
-    if (!user) {
-      res.status(404).send("user not found..!");
-    } else {
-      res.send(user);
-    }
-  } catch (error) {
-    res.status(400).send("Something wents to wrong...");
-  }
-});
-
-//get all user
-app.get("/feed", async (req, res)=> {
-  try {
-    const users = await User.find({});
-    if(!users) {
-      res.status(404).send("users not found ..!");
-    } else {
-      res.send(users);
-    }
-  } catch (error) {
-    res.status(400).send("Something went wrong...");
-  }
-})
-
-//delete user 
-app.delete("/user", async (req, res) => {
-  const userId = req.body.userId;
-  try{
-    await User.findByIdAndDelete(userId);
-    res.send("user deleted successfully..!")
-  }
-  catch (error) {
-    res.status(400).send("Something went wrong...");
-  }
-});
-
-//Update the user
-app.patch("/user",async (req, res) => {
-  const userId = req.body.userId;
-  const data = req.body;
-
-  try {
-    const user = await User.findByIdAndUpdate(userId, data, {returnDocument : "after",
-      runValidators: true,
-    });
-    res.status(200).json({
-      data: user,
-      message: "user updated successfully.."
-    })
-  }catch (error) {
-    res.status(400).send("Failed to add data..!" + error.message);
-  }
-})
 
 connectDB()
   .then(() => {
