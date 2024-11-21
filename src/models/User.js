@@ -45,11 +45,11 @@ const userSchema = new mongoose.Schema(
             type: String,
             default:
                 "https://e7.pngegg.com/pngimages/861/371/png-clipart-silhouette-of-person-silhouette-user-profile-female-man-silhouette-face-animals.png",
-            validate(value) {
-                if (!validator.isURL(value)) {
-                    throw new Error("Invalid profile image URL.");
-                }
-            },
+            // validate(value) {
+            //     if (!validator.isURL(value)) {
+            //         throw new Error("Invalid profile image URL.");
+            //     }
+            // },
         },
         age: {
             type: Number,
