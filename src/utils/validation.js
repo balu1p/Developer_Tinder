@@ -62,9 +62,9 @@ const validateSignup = (req) => {
         throw new Error("Age must be a number between 18 and 100.");
     }
 
-    if (skills && (!Array.isArray(skills) || skills.some(skill => typeof skill !== 'string'))) {
-        throw new Error("Skills must be an array of strings.");
-    }
+    // if (skills && (!Array.isArray(skills) || skills.some(skill => typeof skill !== 'string'))) {
+    //     throw new Error("Skills must be an array of strings.");
+    // }
 
     if (skills && skills.length > 100) {
         throw new Error("You can add only 100 skills.");

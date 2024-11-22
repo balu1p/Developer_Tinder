@@ -20,7 +20,6 @@ app.use('/', userRouter);
 app.use('/', authRouter);
 
 
-
 connectDB()
   .then(() => {
     console.log("DB connected successfully..!");

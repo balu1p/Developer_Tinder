@@ -1,76 +1,17 @@
-const User = require("../models/User.js");
-const { validateSignup } = require("../utils/validation.js");
 const express = require("express");
 const authRouter = express.Router();
 const { uploads } = require('../middlewares/Multer.js');
-const path = require('path');
+const { handleSignup, handleLogin, handleLogout } = require("../controllers/auth.controller.js");
+
 
 //signup
-authRouter.post("/signup", uploads.single('profileImg'), async (req, res) => {
-  try {
-    const { firstName, lastName, password, email } = req.body;
-    //validation
-    validateSignup(req);
-
-    let profileImgUrl = null;
-    if (req.file) {
-      const filename = req.file.filename;
-      profileImgUrl = `${req.protocol}://${req.get('host')}/public/temp/${filename}`;
-    }
-
-    const user = new User({
-      firstName,
-      lastName,
-      password,
-      email,
-      profileImg: profileImgUrl
-    });
-
-    await user.save();
-    res.send("user added successfully..");
-  } catch (error) {
-    res.status(400).send("ERROR " + error.message);
-  }
-});
+authRouter.post("/signup", uploads.single('profileImg'), handleSignup);
 
 //login
-authRouter.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email: email });
-    if (!user) {
-      throw new Error("Invalid credentials");
-    }
-
-    const isPassword = await user.isPasswordCorrect(password);
-    if (isPassword) {
-      const token = await user.getJWT();
-      res.cookie("token", token, {
-        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        httpOnly: true,
-      });
-      res.send("user login successfully..");
-    } else {
-      throw new Error("Invalid credentials");
-    }
-  } catch (error) {
-    res.status(400).send("ERROR " + error.message);
-  }
-});
+authRouter.post("/login", handleLogin);
 
 //logout
 
-authRouter.post("/logout", async (req, res) => {
-  try {
-    res.cookie("token", null, {
-      expires: new Date(Date.now() + 900000),
-      httpOnly: true,
-    });
-    res.send("user logout successfully..");
-  } catch (error) {
-    res.status(400).send("ERROR " + error);
-  }
-});
+authRouter.post("/logout", handleLogout);
 
 module.exports = authRouter;
