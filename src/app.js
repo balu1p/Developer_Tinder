@@ -3,11 +3,17 @@ const connectDB = require("./config/database");
 const app = express();
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const dotenv = require('dotenv');
 
 const profileRouter = require("./routes/profile.js");
 const requestRouter = require("./routes/request.js");
 const userRouter = require("./routes/user.js");
 const authRouter = require("./routes/auth.js");
+
+
+
+//envConfig
+dotenv.config();
 
 // Middleware to parse JSON
 app.use(express.json());
@@ -23,10 +29,10 @@ app.use('/', authRouter);
 connectDB()
   .then(() => {
     console.log("DB connected successfully..!");
-    app.listen(3000, () => {
-      console.log("Server is successfully listening on port 3000");
+    app.listen(process.env.PORT || 5000, () => {
+      console.log(`Server is successfully listening on port ${process.env.PORT || 5000}`);
     });
   })
   .catch((err) => {
-    console.error("DB connection rejected>>>", err);
+    console.error("DB connection rejected...!", err);
   });
